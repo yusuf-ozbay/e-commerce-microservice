@@ -19,6 +19,34 @@ spring:
   main:
     allow-circular-references: true
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: javaguides
+      json:
+        name: javaguides_json
+    exchange:
+      name: javaguides_exchange
+    routing:
+      key: javaguides_routing_key
+      json:
+        key: javaguides_routing_json_key
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mehanogluu2108@gmail.com
+    password: n l m w j p c r z q n y d m n z
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 eureka:
   client:
     fetch-registry: true

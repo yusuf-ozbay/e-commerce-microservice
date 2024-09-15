@@ -6,6 +6,7 @@ import com.javaacademy.basket.dto.ProductDto;
 import com.javaacademy.basket.dto.UserDto;
 import com.javaacademy.basket.entity.Basket;
 import com.javaacademy.basket.entity.BasketItem;
+import com.javaacademy.basket.exception.ResourceNotFoundException;
 import com.javaacademy.basket.library.AuthCallableFeignClient;
 import com.javaacademy.basket.repository.BasketRepository;
 import com.javaacademy.basket.service.BasketService;
@@ -151,6 +152,22 @@ public class BasketServiceImpl implements BasketService {
         basketItemService.delete(basketItem.getBasketItemId());
         basket.setTotalAmount(calculateBasketAmount(basket.getBasketId()));
         basket = repository.save(basket);
+    }
+
+    @Override
+    public BasketDto findById(String id) {
+
+        Basket basket = repository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Basket not found with id:" + id));
+        ;
+        return toDto(basket);
+
+    }
+
+    @Override
+    public UserDto findByUserId(BasketDto basketDto) {
+        UserDto userDto=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
+        return userDto;
     }
 
     public UserDto getUser(String userId) {
