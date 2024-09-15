@@ -4,23 +4,48 @@ server:
 spring:
   application:
     name: auth
+
   datasource:
     url: jdbc:mysql://localhost:3306/e-commerce-user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: 12345678asd
     driverClassName: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
   main:
     allow-circular-references: true
 
-eureka:
-  client:
-    fetch-registry: true
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+  eureka:
+    client:
+      fetch-registry: true
+      serviceUrl:
+        defaultZone: http://localhost:8761/eureka/
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: javaguides
+      json:
+        name: javaguides_json
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ozbay9985@gmail.com
+    password: n l m w j p c r z q n y d m n z
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
