@@ -12,7 +12,7 @@ public interface BasketService {
 
     void removeProductFromBasket(String userId, String basketItemId);
 
-    BasketDto findById(String id);
+    BasketDto findById(Long id);
 
     UserDto findByUserId(BasketDto basketDto);
 }

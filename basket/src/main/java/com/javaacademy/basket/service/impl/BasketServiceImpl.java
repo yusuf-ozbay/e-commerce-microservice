@@ -155,7 +155,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public BasketDto findById(String id) {
+    public BasketDto findById(Long id) {
 
         Basket basket = repository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Basket not found with id:" + id));

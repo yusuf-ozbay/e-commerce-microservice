@@ -40,7 +40,7 @@ public class BasketController {
 
 
     @PostMapping("/checkout/{id}")
-    public ResponseEntity<String> register(@PathVariable String id) {
+    public ResponseEntity<String> register(@PathVariable Long id) {
         BasketDto basketDto=basketService.findById(id);
         basketDto.setStatus(2);
         UserDto userDto=basketService.findByUserId(basketDto);
