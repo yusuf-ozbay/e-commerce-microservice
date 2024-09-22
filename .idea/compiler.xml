@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="basket" />
+        <module name="payment" />
         <module name="stock" />
         <module name="auth" />
         <module name="eureka" />
