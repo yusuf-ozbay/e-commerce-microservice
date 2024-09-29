@@ -11,6 +11,8 @@ public interface PaymentService {
      BasketDto findBasketById(PaymentDto paymentDto);
      String processPayment(PaymentDto paymentDto);
      String register(PaymentDto paymentDto);
+      String checkout(PaymentDto paymentDto);
+      PaymentDto findPaymentById(Long id);
 
 
 }

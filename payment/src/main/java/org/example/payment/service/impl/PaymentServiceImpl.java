@@ -1,8 +1,11 @@
 package org.example.payment.service.impl;
 
+import com.javaacademy.basket.exception.ResourceNotFoundException;
 import org.example.payment.dto.BasketDto;
 import org.example.payment.dto.PaymentDto;
 import org.example.payment.dto.UserDto;
+import org.example.payment.entity.Payment;
+import org.example.payment.repository.PaymentRepository;
 import org.example.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private RabbitMqJsonProducer rabbitMqJsonProducer;
+
+    @Autowired
+    PaymentRepository repository;
 
     RestTemplate restTemplate=new RestTemplate();
     private final String getUserByIdViaGatewayyUrl = "http://localhost:9092/auth/user/getById/";
@@ -72,7 +78,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String register(PaymentDto paymentDto) {
-
         String result = processPayment(paymentDto);
         System.out.println(result);
         BasketDto basketDto = findBasketById(paymentDto);
@@ -81,5 +86,54 @@ public class PaymentServiceImpl implements PaymentService {
         rabbitMqJsonProducer.sendMailAddressToQueue(userDto.getEmail());
         return result;
     }
+
+    public Double paymentAmount(PaymentDto paymentDto) {
+        BasketDto basketDto = findBasketById(paymentDto);
+        paymentDto.setAmount(basketDto.getTotalPrice());
+        return paymentDto.getAmount();
+    }
+
+    public PaymentDto findPaymentById(Long id) {
+        Payment payment=repository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Payment not found with id" + id));
+        return toDto(payment);
+    }
+
+    public String checkout(PaymentDto paymentDto) {
+
+        Payment payment = toEntity(paymentDto);
+        payment = repository.save(payment);
+        paymentDto = toDto(payment);
+        String result = processPayment(paymentDto);
+        System.out.println(result);
+        BasketDto basketDto = findBasketById(paymentDto);
+        paymentStatus(basketDto);
+        UserDto userDto = findUserById(basketDto);
+        rabbitMqJsonProducer.sendMailAddressToQueue(userDto.getEmail());
+        return result;
+
+    }
+
+    public Payment toEntity(PaymentDto dto) {
+        Payment payment = new Payment();
+        payment.setBasketId(dto.getBasketId());
+        payment.setAmount(paymentAmount(dto));
+        payment.setYear(dto.getYear());
+        payment.setMonth(dto.getMonth());
+        payment.setCardNumber(dto.getCardNumber());
+        return payment;
+    }
+
+    public PaymentDto toDto(Payment payment) {
+        PaymentDto dto = new PaymentDto();
+        dto.setId(payment.getId());
+        dto.setBasketId(payment.getBasketId());
+        dto.setAmount(payment.getAmount());
+        dto.setYear(payment.getYear());
+        dto.setMonth(payment.getMonth());
+        dto.setCardNumber(payment.getCardNumber());
+        return dto;
+    }
+
 
 }
