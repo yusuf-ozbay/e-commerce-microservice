@@ -21,6 +21,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long basketId;
-    private double amount;
+    private String cardNumber;
+    private String month;
+    private String year;
+    private Double amount;
 
 }
