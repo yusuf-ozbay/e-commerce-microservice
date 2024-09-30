@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class BasketServiceImpl implements BasketService {
 
-    private static final String authUrl = "http://localhost:8090/auth/users/";
+    private static final String authUrl = "http://localhost:9091/auth/users/";
     public final int BASKET_STATUS_NONE = 0;
     public final int BASKET_STATUS_SALED = 1;
 
@@ -146,7 +146,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void removeProductFromBasket(String userId, String basketItemId) {
-        UserDto userDto = getUser(userId);
+        UserDto userDto = findByUserId(userId);
         Basket basket = repository.findBasketByUserIdAndStatusEquals(userDto.getUserId(), BASKET_STATUS_NONE);
         BasketItem basketItem = basketItemService.findBasketEntity(basketItemId);
         basketItemService.delete(basketItem.getBasketItemId());
@@ -164,15 +164,12 @@ public class BasketServiceImpl implements BasketService {
 
     }
 
-    @Override
-    public UserDto findByUserId(BasketDto basketDto) {
+    public UserDto findByUserId(BasketDto basketDto){
         UserDto userDto=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
         return userDto;
     }
 
-    public UserDto getUser(String userId) {
-        return restTemplate.getForEntity(authUrl + userId, UserDto.class).getBody();
-    }
+
 
     // Response'tan önce çalışacak olan metod
     public BasketDto toDto(Basket basket) {

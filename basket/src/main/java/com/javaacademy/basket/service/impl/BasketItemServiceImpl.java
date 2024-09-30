@@ -13,7 +13,7 @@ public class BasketItemServiceImpl implements BasketItemService {
 
     private final BasketItemRepository repository;
     private final RestTemplate restTemplate;
-    private final String PRODUCT_SERVICE = "http://localhost:8090/stock/products/";
+    private final String PRODUCT_SERVICE = "http://localhost:9091/stock/products/";
 
     public BasketItemServiceImpl(BasketItemRepository repository, RestTemplate restTemplate) {
         this.repository = repository;
@@ -22,8 +22,8 @@ public class BasketItemServiceImpl implements BasketItemService {
 
     @Override
     public BasketItem findBasketItemByBasketIdAndProductId(long basketItemId, long productId) {
-        BasketItem basketItem = repository.findBasketItemByBasket_BasketIdAndProductId(basketItemId , productId);
-        return  basketItem;
+        BasketItem basketItem = repository.findBasketItemByBasket_BasketIdAndProductId(basketItemId, productId);
+        return basketItem;
     }
 
     @Override
@@ -38,12 +38,12 @@ public class BasketItemServiceImpl implements BasketItemService {
         repository.delete(basketItem);
     }
 
-    public ProductDto getProductById(String productId){
-        return restTemplate.getForEntity(PRODUCT_SERVICE + productId , ProductDto.class).getBody();
+    public ProductDto getProductById(String productId) {
+        return restTemplate.getForEntity(PRODUCT_SERVICE + productId, ProductDto.class).getBody();
     }
 
-    public BasketItem findBasketEntity(String basketItemId){
-        BasketItem basketItem =repository.findById(Long.valueOf(basketItemId)).get();
+    public BasketItem findBasketEntity(String basketItemId) {
+        BasketItem basketItem = repository.findById(Long.valueOf(basketItemId)).get();
         return basketItem;
 
     }
