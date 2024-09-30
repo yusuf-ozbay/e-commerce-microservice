@@ -27,6 +27,13 @@ spring:
           predicates:
             - Path=/basket/**
             #=======================
+            -
+
+        - id: payment
+          uri: lb://payment
+          predicates:
+            - Path=/payment/**
+            #=======================
 
 server:
   port: 9091
