@@ -16,24 +16,18 @@ spring:
           uri: lb://auth
           predicates:
             - Path=/auth/**
-            #=======================
         - id: stock
           uri: lb://stock
           predicates:
             - Path=/stock/**
-            #=======================
         - id: basket
           uri: lb://basket
           predicates:
             - Path=/basket/**
-            #=======================
-            -
-
         - id: payment
           uri: lb://payment
           predicates:
             - Path=/payment/**
-            #=======================
 
 server:
   port: 9091
