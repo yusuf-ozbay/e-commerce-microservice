@@ -12,7 +12,7 @@ public interface PaymentService {
      String processPayment(PaymentDto paymentDto);
      String register(PaymentDto paymentDto);
       String checkout(PaymentDto paymentDto);
-      PaymentDto findPaymentById(Long id);
+      PaymentDto findPaymentById(String id);
 
 
 }

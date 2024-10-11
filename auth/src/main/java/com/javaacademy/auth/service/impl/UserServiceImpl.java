@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(String id) {
-        return toDto(userRepository.findById(Long.valueOf(id)).get());
+        return toDto(userRepository.findById(id).get());
     }
 
     @Override
     public UserDto updateUser(String id, UserDto userDto) {
-        User user = userRepository.findById(Long.valueOf(id)).get();
+        User user = userRepository.findById(id).get();
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
         user.setFirstname(userDto.getFirstname());
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String id) {
-        User user = userRepository.findById(Long.valueOf(id)).get();
+        User user = userRepository.findById(id).get();
         userRepository.delete(user);
     }
 

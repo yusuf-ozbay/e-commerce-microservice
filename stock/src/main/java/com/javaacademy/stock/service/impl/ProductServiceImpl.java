@@ -36,14 +36,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProduct(String id) {
-        Product product = repository.findById(Long.valueOf(id)).get();
+        Product product = repository.findById(id).get();
 
         return toDto(product);
     }
 
     @Override
     public ProductDto update(ProductDto productDto, String id) {
-        Product product = repository.findById(Long.valueOf(id)).get();
+        Product product = repository.findById(id).get();
         product.setStock(productDto.getStock());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(String id) {
-        Product product = repository.findById(Long.valueOf(id)).get();
+        Product product = repository.findById(id).get();
         repository.delete(product);
 
     }

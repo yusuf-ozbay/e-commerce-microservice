@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategory(String id) {
-        Category category = repository.findById(Long.valueOf(id)).get();
+        Category category = repository.findById(id).get();
         return toDto(category);
     }
 
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(CategoryDto categoryDto, String id) {
-        Category category = repository.findById(Long.valueOf(id)).get();
+        Category category = repository.findById(id).get();
         category.setName(categoryDto.getName());
         category = repository.save(category);
         return toDto(category);
@@ -50,13 +50,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryEntity(String id) {
-        Category category= repository.findById(Long.valueOf(id)).get();
+        Category category= repository.findById(id).get();
         return category;
     }
 
     @Override
     public void delete(String id) {
-        Category category = repository.findById(Long.valueOf(id)).get();
+        Category category = repository.findById(id).get();
         repository.delete(category);
     }
 

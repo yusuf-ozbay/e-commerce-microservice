@@ -22,25 +22,19 @@ public class BasketController {
 
     @PostMapping("create")
     public BasketResponse addProductToBasket(@RequestBody AddProductRequest productRequest) {
-        return toResponse(basketService.addProductToBasket(productRequest.toDto()));
+        return toResponse(basketService.saveProductToBasket(productRequest.toDto()));
     }
 
     @DeleteMapping("/{userId}/{basketItemId}")
     public String removerBasketItem(@PathVariable String userId,
                                     @PathVariable String basketItemId) {
-        basketService.removeProductFromBasket(userId, basketItemId);
+        basketService.deleteProduct(userId, basketItemId);
 
         return "Ürün başarıyla sepetten kaldırıldı";
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<BasketResponse>  getBasketByUserId(@PathVariable String userId){
-        return ResponseEntity.ok(toResponse(basketService.getBasketByUserId(userId)));
-    }
-
-
     @PostMapping("/checkout/{id}")
-    public ResponseEntity<String> register(@PathVariable Long id) {
+    public ResponseEntity<String> register(@PathVariable String id) {
         BasketDto basketDto=basketService.findById(id);
         basketDto.setStatus(2);
         UserDto userDto=basketService.findByUserId(basketDto);

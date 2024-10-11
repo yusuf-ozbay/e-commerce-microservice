@@ -13,8 +13,8 @@ import java.util.List;
 @Data
 @Builder
 public class AddProductRequest {
-    private long userId;
-    private long productId;
+    private String userId;
+    private String productId;
     private int count;
 
     public BasketDto toDto() {

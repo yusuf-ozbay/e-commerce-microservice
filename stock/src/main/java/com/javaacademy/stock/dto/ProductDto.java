@@ -9,9 +9,9 @@ import lombok.*;
 @Builder
 public class ProductDto{
 
-    private Long productId;
+    private String productId;
     private String name;
     private int stock;
     private double price;
-    private long categoryId;
+    private String categoryId;
 }

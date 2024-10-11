@@ -19,8 +19,8 @@ import lombok.experimental.SuperBuilder;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long basketId;
+    private String id;
+    private String basketId;
     private String cardNumber;
     private String month;
     private String year;

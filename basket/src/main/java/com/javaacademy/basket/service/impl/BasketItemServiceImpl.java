@@ -21,7 +21,7 @@ public class BasketItemServiceImpl implements BasketItemService {
     }
 
     @Override
-    public BasketItem findBasketItemByBasketIdAndProductId(long basketItemId, long productId) {
+    public BasketItem findBasketItemByBasketIdAndProductId(String basketItemId, String productId) {
         BasketItem basketItem = repository.findBasketItemByBasket_BasketIdAndProductId(basketItemId, productId);
         return basketItem;
     }
@@ -33,8 +33,7 @@ public class BasketItemServiceImpl implements BasketItemService {
 
 
     @Override
-    public void delete(long basketItemId) {
-        BasketItem basketItem = repository.findById(basketItemId).get();
+    public void delete(BasketItem basketItem) {
         repository.delete(basketItem);
     }
 
@@ -42,11 +41,7 @@ public class BasketItemServiceImpl implements BasketItemService {
         return restTemplate.getForEntity(PRODUCT_SERVICE + productId, ProductDto.class).getBody();
     }
 
-    public BasketItem findBasketEntity(String basketItemId) {
-        BasketItem basketItem = repository.findById(Long.valueOf(basketItemId)).get();
-        return basketItem;
 
-    }
 
     public BasketItemDto toDto(BasketItem basketItem) {
         return BasketItemDto.builder()

@@ -12,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class CategoryResponse  {
-    private  long categoryId;
+    private  String categoryId;
     private  String name;
 }

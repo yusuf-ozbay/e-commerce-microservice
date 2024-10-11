@@ -93,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentDto.getAmount();
     }
 
-    public PaymentDto findPaymentById(Long id) {
+    public PaymentDto findPaymentById(String id) {
         Payment payment=repository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Payment not found with id" + id));
         return toDto(payment);

@@ -9,12 +9,12 @@ import lombok.*;
 @Builder
 public class ProductDto  {
 
-    private long productId;
+    private String productId;
     private String name;
     private int stock;
     private double price;
 
-    public ProductDto(long productId){
+    public ProductDto(String productId){
         this.productId = productId;
     }
 

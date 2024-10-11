@@ -14,8 +14,8 @@ import lombok.Setter;
 public class BasketItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long basketItemId;
-    private long productId;
+    private String basketItemId;
+    private String productId;
     private int count;
     private double basketItemAmount;
     @ManyToOne

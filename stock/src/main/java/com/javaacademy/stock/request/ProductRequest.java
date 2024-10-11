@@ -13,7 +13,7 @@ public class ProductRequest {
     private String name;
     private int stock;
     private double price;
-    private long categoryId;
+    private String categoryId;
 
     public ProductDto toDto(){
         return ProductDto.builder()

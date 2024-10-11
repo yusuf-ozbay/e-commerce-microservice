@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentResponse {
 
-    private Long id;
-    private Long basketId;
+    private String id;
+    private String basketId;
     private String cardNumber;
     private String month;
     private String year;

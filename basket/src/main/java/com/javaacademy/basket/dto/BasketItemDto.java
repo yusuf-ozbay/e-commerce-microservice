@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class BasketItemDto {
-    private long basketItemId;
+    private String basketItemId;
     private double basketItemAmount;
     private int count;
     private ProductDto product;

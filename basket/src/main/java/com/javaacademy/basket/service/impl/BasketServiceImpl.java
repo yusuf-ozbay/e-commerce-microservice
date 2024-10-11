@@ -7,9 +7,9 @@ import com.javaacademy.basket.dto.UserDto;
 import com.javaacademy.basket.entity.Basket;
 import com.javaacademy.basket.entity.BasketItem;
 import com.javaacademy.basket.exception.ResourceNotFoundException;
-import com.javaacademy.basket.library.AuthCallableFeignClient;
 import com.javaacademy.basket.repository.BasketRepository;
 import com.javaacademy.basket.service.BasketService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,29 +19,21 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class BasketServiceImpl implements BasketService {
 
     private static final String authUrl = "http://localhost:9091/auth/users/";
     public final int BASKET_STATUS_NONE = 0;
-    public final int BASKET_STATUS_SALED = 1;
 
-
-    private final AuthCallableFeignClient authCallableFeignClient;
 
     private final BasketRepository repository;
     private final BasketItemServiceImpl basketItemService;
     private final RestTemplate restTemplate;
 
 
-    public BasketServiceImpl(AuthCallableFeignClient authCallableFeignClient, BasketRepository basketRepository, BasketItemServiceImpl basketItemService, RestTemplate restTemplate) {
-        this.authCallableFeignClient = authCallableFeignClient;
-        this.repository = basketRepository;
-        this.basketItemService = basketItemService;
-        this.restTemplate = restTemplate;
-    }
 
     @Override
-    public BasketDto addProductToBasket(BasketDto basketDto) {
+    public BasketDto saveProductToBasket(BasketDto basketDto) {
         Basket basket = repository.findBasketByUserIdAndStatusEquals(basketDto.getUserId(), BASKET_STATUS_NONE);
         if (basket != null) {
             // Basket Var Senaryosu
@@ -53,9 +45,48 @@ public class BasketServiceImpl implements BasketService {
 
     }
 
-    private BasketDto sepetYokYeniSepetOlustur(BasketDto basketDto) {
+    public UserDto findByUserId(BasketDto basketDto){
+        UserDto userDto=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
+        return userDto;
+    }
+
+
+    @Override
+    public BasketDto findById(String id) {
+        Basket basket = repository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Basket not found with id:" + id));
+        ;
+        return toDto(basket);
+
+    }
+
+
+    @Override
+    public BasketDto deleteProduct(String basketId, String productId) {
+        Basket basket = repository.findById(basketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Basket not found with id: " + basketId));
+
+        List<BasketItem> basketItems = basket.getBasketItemList();
+        BasketItem basketItem = basketItemService.findBasketItemByBasketIdAndProductId(basketId, productId);
+
+        if (basketItem != null) {
+            basketItems.remove(basketItem);
+            basketItemService.delete(basketItem);
+            basket.setBasketItemList(basketItems);
+            basket.setTotalAmount(calculateBasketAmount(basket.getBasketItemList()));
+            repository.save(basket);
+            return toDto(basket);
+        } else {
+            throw new RuntimeException("Product not found in basket");
+        }
+    }
+
+
+
+    private BasketDto sepetYokYeniSepetOlustur(BasketDto basketDto) {                 //bu var
         Basket basket = new Basket();
-        UserDto user = getUser(String.valueOf(basketDto.getUserId()));
+        UserDto user=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
+
         basket.setUserId(user.getUserId());
         basket.setStatus(BASKET_STATUS_NONE);
         List<BasketItem> basketItemList = new ArrayList<>();
@@ -83,7 +114,7 @@ public class BasketServiceImpl implements BasketService {
         return toDto(basket);
     }
 
-    private BasketDto sepetVarUrunEkle(Basket basket, BasketDto basketDto) {
+    private BasketDto sepetVarUrunEkle(Basket basket, BasketDto basketDto) {                    //bu var
         List<BasketItem> basketItemList = basket.getBasketItemList();
         // Aşağıdaki kod satırı yerine gelen listeyi for ile dönebilirdik fakat bunu yapmak yerine repository'e metod yazıp oradan var mı yok mu kontrolünü yapmak bestPractice.
         BasketItem basketItem = basketItemService.findBasketItemByBasketIdAndProductId(basket.getBasketId(), basketDto.getBasketItemList().get(0).getProduct().getProductId());
@@ -120,7 +151,7 @@ public class BasketServiceImpl implements BasketService {
 
         }
 
-        basket.setTotalAmount(calculateBasketAmount(basket.getBasketId()));
+        basket.setTotalAmount(calculateBasketAmount(basket.getBasketItemList()));
         basket.setBasketItemList(basketItemList);
         repository.save(basket);
 
@@ -128,57 +159,26 @@ public class BasketServiceImpl implements BasketService {
 
     }
 
-    private double calculateBasketAmount(long basketId) {
-        Basket basket = repository.findBasketByBasketId(basketId);
-        double totalAmount = 0.0;
-        for (BasketItem basketItem : basket.getBasketItemList()) {
+    private double calculateBasketAmount(List<BasketItem> basketItems) {                                  //sepet tutarını hesaplıyor
+        double totalAmount = 0;
+        for (BasketItem basketItem : basketItems) {
             totalAmount += basketItem.getBasketItemAmount();
         }
         return totalAmount;
     }
 
-    @Override
-    public BasketDto getBasketByUserId(String userId) {
-//        UserDto userDto = restTemplate.getForEntity(authUrl + userId, UserDto.class).getBody();
-        UserDto userDto = authCallableFeignClient.getUserById(userId);
-        return toDto(repository.findBasketByUserIdAndStatusEquals(userDto.getUserId(), BASKET_STATUS_NONE));
-    }
-
-    @Override
-    public void removeProductFromBasket(String userId, String basketItemId) {
-        UserDto userDto = findByUserId(userId);
-        Basket basket = repository.findBasketByUserIdAndStatusEquals(userDto.getUserId(), BASKET_STATUS_NONE);
-        BasketItem basketItem = basketItemService.findBasketEntity(basketItemId);
-        basketItemService.delete(basketItem.getBasketItemId());
-        basket.setTotalAmount(calculateBasketAmount(basket.getBasketId()));
-        basket = repository.save(basket);
-    }
-
-    @Override
-    public BasketDto findById(Long id) {
-
-        Basket basket = repository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Basket not found with id:" + id));
-        ;
-        return toDto(basket);
-
-    }
-
-    public UserDto findByUserId(BasketDto basketDto){
-        UserDto userDto=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
-        return userDto;
-    }
-
 
 
     // Response'tan önce çalışacak olan metod
-    public BasketDto toDto(Basket basket) {
+    public BasketDto toDto (Basket basket) {
         return BasketDto.builder()
-                .basketId(Math.toIntExact(basket.getBasketId()))
+                .basketId(basket.getBasketId())
                 .totalAmount(basket.getTotalAmount())
                 .userId(basket.getUserId())
                 .status(basket.getStatus())
-                .basketItemList(basket.getBasketItemList().stream().map(basketItem -> basketItemService.toDto(basketItem)).collect(Collectors.toList()))
+                .basketItemList(basket.getBasketItemList().stream()
+                        .map(basketItem -> basketItemService.toDto(basketItem))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

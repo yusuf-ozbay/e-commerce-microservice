@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentRequest {
-    private Long basketId;
+    private String basketId;
     private String cardNumber;
     private String month;
     private String year;

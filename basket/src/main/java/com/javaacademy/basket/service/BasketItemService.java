@@ -4,10 +4,10 @@ package com.javaacademy.basket.service;
 import com.javaacademy.basket.entity.BasketItem;
 
 public interface BasketItemService {
-    BasketItem findBasketItemByBasketIdAndProductId(long basketItemId , long productId);
+    BasketItem findBasketItemByBasketIdAndProductId(String basketItemId , String productId);
 
     BasketItem save(BasketItem basketItem);
 
-    void delete(long basketItemId);
+    void delete(BasketItem basketItem);
 
 }

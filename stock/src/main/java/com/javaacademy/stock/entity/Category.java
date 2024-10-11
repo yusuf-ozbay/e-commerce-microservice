@@ -16,6 +16,6 @@ import lombok.Setter;
 public class Category  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long categoryId;
+    private String categoryId;
     private String name;
 }

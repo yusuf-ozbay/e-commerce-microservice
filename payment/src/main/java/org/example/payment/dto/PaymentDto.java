@@ -12,8 +12,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class PaymentDto {
-    private Long id;
-    private Long basketId;
+    private String id;
+    private String basketId;
     private String cardNumber;
     private String month;
     private String year;

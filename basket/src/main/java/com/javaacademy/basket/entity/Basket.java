@@ -17,10 +17,10 @@ import java.util.UUID;
 public class Basket{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long basketId;
+    private String basketId;
     private double totalAmount;
     private int status;
-    private long userId;
+    private String userId;
     @OneToMany(mappedBy = "basket" , cascade = CascadeType.ALL)
     private List<BasketItem> basketItemList;
 }

@@ -15,10 +15,10 @@ import java.util.List;
 @SuperBuilder
 public class BasketDto {
 
-    private Long id;
+    private String id;
     private int status;
     private Double totalPrice;
-    private Long userId;
+    private String userId;
     private List<BasketProductDto> basketProducts;
     private int count;
 

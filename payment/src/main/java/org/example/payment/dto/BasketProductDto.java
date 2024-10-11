@@ -13,14 +13,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class BasketProductDto {
 
-    private Long id;
+    private String id;
     private int count;
     private Double totalPrice;
-    private Long productId;
+    private String productId;
     private String productName;
 
 
-    public  BasketProductDto(Long productId,int count){
+    public  BasketProductDto(String productId,int count){
         this.productId=productId;
         this.count=count;
     }
