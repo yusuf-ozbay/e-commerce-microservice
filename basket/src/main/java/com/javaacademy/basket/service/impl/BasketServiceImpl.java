@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BasketServiceImpl implements BasketService {
 
-    private static final String authUrl = "http://localhost:9091/auth/users/";
+    private static final String authUrl = "http://localhost:9092/users/";
     public final int BASKET_STATUS_NONE = 0;
 
 
@@ -83,7 +83,7 @@ public class BasketServiceImpl implements BasketService {
 
 
 
-    private BasketDto sepetYokYeniSepetOlustur(BasketDto basketDto) {                 //bu var
+    private BasketDto sepetYokYeniSepetOlustur(BasketDto basketDto) {
         Basket basket = new Basket();
         UserDto user=restTemplate.getForObject(authUrl + basketDto.getUserId(), UserDto.class);
 
@@ -126,7 +126,7 @@ public class BasketServiceImpl implements BasketService {
             System.out.println("Eklenen ürün sepette yok senaryosu");
             BasketItem newBasketItem = new BasketItem();
 
-            // Product product = basketItem.getProduct(); Hoca bunu yazdı yüksek ihtimalle yanlış var!
+            // Product product = basketItem.getProduct();
             ProductDto productDto = basketItemService.getProductById(String.valueOf(basketDto.getBasketItemList().get(0).getProduct().getProductId()));
             newBasketItem.setProductId(productDto.getProductId());
             newBasketItem.setCount(basketDto.getBasketItemList().get(0).getCount());

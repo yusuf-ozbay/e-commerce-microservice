@@ -13,7 +13,7 @@ public class BasketItemServiceImpl implements BasketItemService {
 
     private final BasketItemRepository repository;
     private final RestTemplate restTemplate;
-    private final String PRODUCT_SERVICE = "http://localhost:9091/stock/products/";
+    private final String PRODUCT_SERVICE = "http://localhost:9093/products/";
 
     public BasketItemServiceImpl(BasketItemRepository repository, RestTemplate restTemplate) {
         this.repository = repository;
