@@ -21,8 +21,8 @@ public class PaymentServiceImpl implements PaymentService {
     PaymentRepository repository;
 
     RestTemplate restTemplate=new RestTemplate();
-    private final String getUserByIdViaGatewayyUrl = "http://localhost:9092/auth/user/getById/";
-    private final String getBasketByIdViaGatewayyUrl="http://localhost:9094/basket/basket/getById/";
+    private final String getUserByIdViaGatewayyUrl = "http://localhost:9092/user/getById/";
+    private final String getBasketByIdViaGatewayyUrl="http://localhost:9094/basket/getById/";
 
 
     //Bu metot, BasketDto nesnesinin durumunu kontrol ederek eğer durum 1 ise onu 3 olarak günceller
@@ -47,7 +47,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public BasketDto findBasketById(PaymentDto paymentDto) {
-        return restTemplate.getForObject(getBasketByIdViaGatewayyUrl+paymentDto.getBasketId(),BasketDto.class);
+        BasketDto basketDto= restTemplate.getForObject(getBasketByIdViaGatewayyUrl+paymentDto.getBasketId(),BasketDto.class);
+        return basketDto;
+
     }
 
 
@@ -89,8 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     public Double paymentAmount(PaymentDto paymentDto) {
         BasketDto basketDto = findBasketById(paymentDto);
-        paymentDto.setAmount(basketDto.getTotalPrice());
-        return paymentDto.getAmount();
+        return basketDto.getTotalPrice();
     }
 
     public PaymentDto findPaymentById(String id) {
@@ -99,16 +100,18 @@ public class PaymentServiceImpl implements PaymentService {
         return toDto(payment);
     }
 
+
+
     public String checkout(PaymentDto paymentDto) {
 
-        Payment payment = toEntity(paymentDto);
-        payment = repository.save(payment);
-        paymentDto = toDto(payment);
+
         String result = processPayment(paymentDto);
         System.out.println(result);
         BasketDto basketDto = findBasketById(paymentDto);
         paymentStatus(basketDto);
         UserDto userDto = findUserById(basketDto);
+        Payment payment = toEntity(paymentDto);
+         repository.save(payment);
         rabbitMqJsonProducer.sendMailAddressToQueue(userDto.getEmail());
         return result;
 
